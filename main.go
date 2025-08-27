@@ -1,9 +1,9 @@
 package main
 
 import (
-	"net/http"
 	"quiz-api/config/initializers"
 	"quiz-api/database"
+	"quiz-api/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,10 +17,6 @@ func main() {
 	database.DBMigrate()
 
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
+	routes.Routes(r)
 	r.Run()
 }
