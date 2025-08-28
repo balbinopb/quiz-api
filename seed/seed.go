@@ -55,6 +55,11 @@ func RunSeed() {
 	}
 
 	for _, q := range questions {
-		db.FirstOrCreate(&q, models.Question{QuestionText: q.QuestionText})
+		var existing models.Question
+		if err := db.Where("question_text = ?", q.QuestionText).First(&existing).Error; err != nil {
+			// Question does not exist, create it along with options
+			db.Create(&q)
+		}
 	}
+
 }

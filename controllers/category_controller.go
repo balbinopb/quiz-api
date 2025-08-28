@@ -9,10 +9,11 @@ import (
 )
 
 func GetCategories(c *gin.Context) {
-	var categories []models.Category
-	database.DB.Find(&categories)
-	c.JSON(http.StatusOK, categories)
+    var categories []models.Category
+    database.DB.Preload("Questions.Options").Find(&categories)
+    c.JSON(http.StatusOK, categories)
 }
+
 
 func CreateCategory(c *gin.Context) {
 	var input models.Category
