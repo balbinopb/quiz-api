@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"quiz-api/config/initializers"
 	"quiz-api/database"
 	"quiz-api/routes"
@@ -17,7 +18,9 @@ func init() {
 func main() {
 	database.DBMigrate()
 
-	seed.RunSeed()
+	if os.Getenv("APP_ENV") != "production" {
+		seed.RunSeed()
+	}
 
 	r := gin.Default()
 	routes.Routes(r)
