@@ -55,8 +55,17 @@ func SubmitQuiz(c *gin.Context) {
 }
 
 func GetUserResults(c *gin.Context) {
-	userID := c.GetInt("user_id")
-	var results []models.QuizResult
-	database.DB.Where("user_id = ?", userID).Find(&results)
+    userID := c.GetUint("user_id") 
+    var results []models.QuizResultResponse
+
+	if err := database.DB.Model(&models.QuizResult{}).
+		Select("id, user_id, score").
+		Where("user_id = ?", userID).
+		Scan(&results).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch results"})
+		return
+	}
+
 	c.JSON(http.StatusOK, results)
 }
+

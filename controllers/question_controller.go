@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"quiz-api/database"
 	"quiz-api/models"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -52,10 +53,27 @@ func UpdateQuestion(c *gin.Context) {
 }
 
 func DeleteQuestion(c *gin.Context) {
-	id := c.Param("id")
-	if err := database.DB.Delete(&models.Question{}, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "question not found"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "question deleted"})
+    var question models.Question
+
+    // Convert id from string to uint
+    id, err := strconv.Atoi(c.Param("id"))
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+        return
+    }
+
+    // First check if it exists
+    if err := database.DB.First(&question, id).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "question not found"})
+        return
+    }
+
+    // Delete (hard delete if needed)
+    if err := database.DB.Delete(&question).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "question deleted"})
 }
+

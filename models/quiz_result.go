@@ -9,3 +9,10 @@ type QuizResult struct {
 	Score     int       `gorm:"not null"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 }
+
+
+type QuizResultResponse struct {
+	ID        uint      `json:"id"`
+	UserID    uint      `json:"user_id"`
+	Score     int       `json:"score"`
+}

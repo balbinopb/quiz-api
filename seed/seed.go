@@ -7,6 +7,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+
+// {
+// 	"email":"admin@example.com",
+// 	"password":"admin123"
+// }
+
 func RunSeed() {
 	db := database.DB
 
