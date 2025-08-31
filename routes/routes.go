@@ -52,4 +52,6 @@ func Routes(r *gin.Engine) {
 		reports.GET("/top-scores", controllers.GetTopScores)
 		reports.GET("/users", controllers.GetUsersReport)
 	}
+
+	// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }

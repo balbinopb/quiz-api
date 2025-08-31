@@ -8,12 +8,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetQuestions godoc
+// @Summary Get all questions
+// @Description Fetch all questions with their options
+// @Tags questions
+// @Produce json
+// @Success 200 {array} models.Question
+// @Router /questions [get]
 func GetQuestions(c *gin.Context) {
 	var questions []models.Question
 	database.DB.Preload("Options").Find(&questions)
 	c.JSON(http.StatusOK, questions)
 }
 
+// GetQuestionByID godoc
+// @Summary Get question by ID
+// @Description Fetch a question by ID with options
+// @Tags questions
+// @Produce json
+// @Param id path int true "Question ID"
+// @Success 200 {object} models.Question
+// @Failure 404 {object} map[string]string
+// @Router /questions/{id} [get]
 func GetQuestionByID(c *gin.Context) {
 	id := c.Param("id")
 	var question models.Question
@@ -24,6 +40,16 @@ func GetQuestionByID(c *gin.Context) {
 	c.JSON(http.StatusOK, question)
 }
 
+// CreateQuestion godoc
+// @Summary Create a question
+// @Description Add a new question with options
+// @Tags questions
+// @Accept json
+// @Produce json
+// @Param question body models.Question true "Question Data"
+// @Success 201 {object} models.Question
+// @Failure 400 {object} map[string]string
+// @Router /questions [post]
 func CreateQuestion(c *gin.Context) {
 	var input models.Question
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -34,6 +60,19 @@ func CreateQuestion(c *gin.Context) {
 	c.JSON(http.StatusCreated, input)
 }
 
+
+// UpdateQuestion godoc
+// @Summary Update a question
+// @Description Update question by ID
+// @Tags questions
+// @Accept json
+// @Produce json
+// @Param id path int true "Question ID"
+// @Param question body models.Question true "Question Data"
+// @Success 200 {object} models.Question
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /questions/{id} [put]
 func UpdateQuestion(c *gin.Context) {
 	id := c.Param("id")
 	var question models.Question
@@ -51,6 +90,14 @@ func UpdateQuestion(c *gin.Context) {
 	c.JSON(http.StatusOK, question)
 }
 
+// DeleteQuestion godoc
+// @Summary Delete a question
+// @Description Delete question by ID
+// @Tags questions
+// @Param id path int true "Question ID"
+// @Success 200 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /questions/{id} [delete]
 func DeleteQuestion(c *gin.Context) {
 	id := c.Param("id")
 	if err := database.DB.Delete(&models.Question{}, id).Error; err != nil {

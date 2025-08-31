@@ -8,6 +8,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetProfile godoc
+// @Summary      Get user profile
+// @Description  Retrieve the profile of the currently authenticated user
+// @Tags         users
+// @Produce      json
+// @Success      200 {object} models.User
+// @Failure      401 {object} map[string]string
+// @Failure      404 {object} map[string]string
+// @Router       /profile [get]
+// @Security     BearerAuth
 func GetProfile(c *gin.Context) {
 	userIDInterface, exists := c.Get("user_id")
 	if !exists {

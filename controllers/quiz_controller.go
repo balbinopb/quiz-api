@@ -10,6 +10,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// StartQuiz godoc
+// @Summary Start a quiz
+// @Description Get randomized questions by category
+// @Tags quiz
+// @Produce json
+// @Param category query int true "Category ID"
+// @Success 200 {array} models.Question
+// @Router /quiz/start [get]
 func StartQuiz(c *gin.Context) {
 	categoryID := c.Query("category")
 	var questions []models.Question
@@ -22,6 +30,17 @@ func StartQuiz(c *gin.Context) {
 	c.JSON(http.StatusOK, questions)
 }
 
+
+// SubmitQuiz godoc
+// @Summary Submit quiz answers
+// @Description Submit answers and calculate score
+// @Tags quiz
+// @Accept json
+// @Produce json
+// @Param answers body map[uint]string true "Answers in {question_id: answer} format"
+// @Success 200 {object} map[string]int
+// @Failure 400 {object} map[string]string
+// @Router /quiz/submit [post]
 func SubmitQuiz(c *gin.Context) {
 	userID := c.GetUint("user_id")
 
@@ -54,6 +73,14 @@ func SubmitQuiz(c *gin.Context) {
 	})
 }
 
+
+// GetUserResults godoc
+// @Summary Get user quiz results
+// @Description Get all past quiz results for logged-in user
+// @Tags quiz
+// @Produce json
+// @Success 200 {array} models.QuizResult
+// @Router /quiz/results [get]
 func GetUserResults(c *gin.Context) {
 	userID := c.GetInt("user_id")
 	var results []models.QuizResult
